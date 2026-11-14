@@ -9,7 +9,6 @@ import com.paulaoramas.tetris.domain.model.Tetromino;
 import com.paulaoramas.tetris.domain.port.RandomPieceGenerator;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 

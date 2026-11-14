@@ -1,7 +1,6 @@
 package com.paulaoramas.tetris.infrastructure.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.paulaoramas.tetris.domain.engine.GameEngine;
 import com.paulaoramas.tetris.domain.model.GameState;
 import com.paulaoramas.tetris.infrastructure.persistence.AbstractPostgresIntegrationTest;
