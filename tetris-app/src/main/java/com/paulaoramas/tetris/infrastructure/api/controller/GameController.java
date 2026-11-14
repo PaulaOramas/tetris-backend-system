@@ -1,8 +1,11 @@
 package com.paulaoramas.tetris.infrastructure.api.controller;
 
 import com.paulaoramas.tetris.infrastructure.api.dto.GameResponseDto;
+import com.paulaoramas.tetris.infrastructure.api.service.GamePlayService;
 import com.paulaoramas.tetris.infrastructure.api.service.GameService;
 import com.paulaoramas.tetris.infrastructure.security.UserPrincipal;
+import com.paulaoramas.tetris.infrastructure.websocket.dto.PlayerMoveRequest;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -12,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,9 +26,11 @@ import java.util.UUID;
 public class GameController {
 
     private final GameService gameService;
+    private final GamePlayService gamePlayService;
 
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService, GamePlayService gamePlayService) {
         this.gameService = gameService;
+        this.gamePlayService = gamePlayService;
     }
 
     @PostMapping
@@ -36,6 +42,16 @@ public class GameController {
     @GetMapping("/{id}")
     public ResponseEntity<GameResponseDto> getGame(@PathVariable("id") UUID id) {
         GameResponseDto response = gameService.getGame(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}/moves")
+    public ResponseEntity<GameResponseDto> applyMove(
+            @PathVariable("id") UUID id,
+            @Valid @RequestBody PlayerMoveRequest request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        GameResponseDto response = gamePlayService.applyMove(id, request.move(), principal);
         return ResponseEntity.ok(response);
     }
 
