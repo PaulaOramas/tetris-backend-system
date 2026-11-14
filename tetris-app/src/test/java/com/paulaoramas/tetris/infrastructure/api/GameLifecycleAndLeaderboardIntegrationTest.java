@@ -130,4 +130,32 @@ class GameLifecycleAndLeaderboardIntegrationTest extends AbstractPostgresIntegra
                 .andExpect(jsonPath("$.content", hasSize(greaterThanOrEqualTo(2))))
                 .andExpect(jsonPath("$.totalElements", greaterThanOrEqualTo(2)));
     }
+
+    @Test
+    void authenticated_user_can_dispatch_moves_via_rest() throws Exception {
+        // Create game
+        MvcResult createResult = mockMvc.perform(post("/api/games")
+                        .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String gameId = objectMapper.readTree(createResult.getResponse().getContentAsString()).get("id").asText();
+
+        // Dispatch move LEFT via REST
+        var moveReq = new com.paulaoramas.tetris.infrastructure.websocket.dto.PlayerMoveRequest(UUID.fromString(gameId), "LEFT");
+        mockMvc.perform(post("/api/games/" + gameId + "/moves")
+                        .header("Authorization", "Bearer " + userToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(moveReq)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.activePiece.x").value(2));
+
+        // Dispatch invalid move
+        var invalidReq = new com.paulaoramas.tetris.infrastructure.websocket.dto.PlayerMoveRequest(UUID.fromString(gameId), "INVALID_MOVE");
+        mockMvc.perform(post("/api/games/" + gameId + "/moves")
+                        .header("Authorization", "Bearer " + userToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidReq)))
+                .andExpect(status().isBadRequest());
+    }
 }
