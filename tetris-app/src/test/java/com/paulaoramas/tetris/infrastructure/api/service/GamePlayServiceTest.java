@@ -1,6 +1,5 @@
 package com.paulaoramas.tetris.infrastructure.api.service;
 
-import com.paulaoramas.tetris.domain.engine.BagPieceGenerator;
 import com.paulaoramas.tetris.domain.engine.GameEngine;
 import com.paulaoramas.tetris.domain.model.GameState;
 import com.paulaoramas.tetris.infrastructure.api.dto.GameResponseDto;
