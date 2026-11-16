@@ -131,6 +131,13 @@
                     </configuration>
                 </plugin>
 
+                <!-- Spring Boot plugin management -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+
                 <!-- Surefire: runs JUnit 5 tests -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

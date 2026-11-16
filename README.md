@@ -153,8 +153,11 @@ curl http://localhost:8080/actuator/health
 # Run test suite (requires Docker daemon for Testcontainers)
 ./mvnw clean verify
 
+# Build and install core domain into local repository
+./mvnw clean install -DskipTests
+
 # Start the Spring Boot backend
-./mvnw spring-boot:run -pl tetris-app
+./mvnw spring-boot:run -pl tetris-app -am
 ```
 
 ---
